@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { cn } from '@/lib/utils'
-import Navbar from '@/components/Navbar'
+import { cn } from '../lib/utils'
+import Navbar from '../components/Navbar'
+import NextAuthSessionProvider from '../providers/SessionProvider'
+import { Toaster } from 'sonner'
 
 const inter = Inter({ weight: '400', subsets: ['latin'] })
 
@@ -24,10 +26,13 @@ export default function RootLayout({
                     inter.className
                 )}
             >
-                <Navbar />
-                <main className="mx-auto md:max-w-screen-sm px-10 py-20">
-                    {children}
-                </main>
+                <NextAuthSessionProvider>
+                    <Navbar />
+                    <main className="mx-auto md:max-w-screen-sm px-10">
+                        {children}
+                    </main>
+                    <Toaster richColors expand duration={2000} />
+                </NextAuthSessionProvider>
             </body>
         </html>
     )
