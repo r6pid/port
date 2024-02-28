@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Loader, Router, Upload, X } from 'lucide-react'
 import { UploadButton } from '../lib/utils'
+import { toast } from 'sonner'
 
 export default function PageBackground({
     username,
@@ -17,12 +18,59 @@ export default function PageBackground({
     )
     const [backgroundDeleteLoading, setBackgroundDeleteLoading] =
         useState(false)
-    const deleteBackground = () => {
+    const deleteBackground = async () => {
         if (backgroundDeleteLoading) return
-        setBackgroundDeleteLoading(true)
-        setTimeout(() => {
+        try {
+            setBackgroundDeleteLoading(true)
+            const response = await fetch('/api/user/bio/edit/background', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    backgroundURL: null,
+                }),
+            })
+            const responseJson = await response.json()
+            if (response.ok) {
+                toast.success('Background Deleted')
+            } else {
+                toast.error('Something went wrong')
+                console.error(responseJson.message)
+            }
+        } catch (error) {
+            console.error('Error checking username:', error)
+        } finally {
+            setBackgroundDeleteLoading(true)
+            setBackgroundURL(null)
+        }
+    }
+    const uploadBackground = async (URL: string) => {
+        try {
+            setBackgroundDeleteLoading(true)
+            const response = await fetch('/api/user/bio/edit/background', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    backgroundURL: URL,
+                }),
+            })
+            const responseJson = await response.json()
+            if (response.ok) {
+                toast.success('Background Uploaded')
+            } else {
+                toast.error('Something went wrong')
+                console.error(responseJson.message)
+            }
+        } catch (error) {
+            console.error('Error checking username:', error)
+        } finally {
             setBackgroundDeleteLoading(false)
-        }, 1000)
+        }
     }
     return (
         <>
@@ -31,7 +79,7 @@ export default function PageBackground({
                     <Image
                         fill
                         src={backgroundURL}
-                        className="rounded-lg pointer-events-none select-none"
+                        className="rounded-lg pointer-events-none select-none border"
                         alt="Background Image"
                     />
                     <div
@@ -57,11 +105,11 @@ export default function PageBackground({
                     }}
                     endpoint="imageUploader"
                     onClientUploadComplete={(res) => {
-                        console.log('Files: ', res)
                         setBackgroundURL(res[0].url)
+                        uploadBackground(res[0].url)
                     }}
                     onUploadError={(error: Error) => {
-                        alert(`ERROR! ${error.message}`)
+                        toast('Something went wrong')
                     }}
                 />
             )}

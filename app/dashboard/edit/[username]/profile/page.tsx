@@ -135,25 +135,27 @@ export default function ProfileTab({
                                 </FormItem>
                             )}
                         />
-                        {isLoading ? (
-                            <Button
-                                disabled
-                                variant="default"
-                                className="mt-4 disabled w-full"
-                                type="submit"
-                            >
-                                <Loader className="h-4 w-4 mr-2 animate-spin" />
-                                Create
-                            </Button>
-                        ) : (
-                            <Button
-                                variant="default"
-                                className="mt-4 w-full"
-                                type="submit"
-                            >
-                                Save
-                            </Button>
-                        )}
+                        <div>
+                            {isLoading ? (
+                                <Button
+                                    disabled
+                                    variant="default"
+                                    className="mt-4 disabled w-full"
+                                    type="submit"
+                                >
+                                    <Loader className="h-4 w-4 mr-2 animate-spin" />
+                                    Create
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant="default"
+                                    className="mt-4 w-full"
+                                    type="submit"
+                                >
+                                    Save
+                                </Button>
+                            )}
+                        </div>
                     </form>
                 </Form>
             </div>

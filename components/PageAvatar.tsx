@@ -8,22 +8,41 @@ import { toast } from 'sonner'
 
 export default function PageAvatar({
     username,
-    defaultURL = '/defav.png',
+    defaultURL,
 }: {
     username: string
-    defaultURL?: string
+    defaultURL: string
 }) {
     const [avatarURL, setAvatarURL] = useState<string | null>(defaultURL)
     const [avatarDeleteLoading, setAvatarDeleteLoading] = useState(false)
-    const deleteAvatar = () => {
+    const deleteAvatar = async () => {
         if (avatarDeleteLoading) return
-        setAvatarDeleteLoading(true)
-        setTimeout(() => {
-            setAvatarDeleteLoading(false)
-        }, 1000)
-        console.log('delete avatar')
+        try {
+            setAvatarDeleteLoading(true)
+            const response = await fetch('/api/user/bio/edit/avatar', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    avatarURL: avatarURL,
+                }),
+            })
+            const responseJson = await response.json()
+            if (!response.ok) {
+                toast.error('Something went wrong')
+                console.error(responseJson.message)
+            } else {
+                toast.success('Avatar Deleted')
+            }
+        } catch (error) {
+            console.error('Error checking username:', error)
+        } finally {
+            setAvatarDeleteLoading(true)
+            setAvatarURL(null)
+        }
     }
-    console.log('avatarURL: ', avatarURL)
     const uploadAvatar = async (URL: string) => {
         try {
             setAvatarDeleteLoading(true)
@@ -39,7 +58,7 @@ export default function PageAvatar({
             })
             const responseJson = await response.json()
             if (response.ok) {
-                toast.success('Avatar Saved!')
+                toast.success('Avatar Uploaded')
             } else {
                 toast.error('Something went wrong')
                 console.error(responseJson.message)
@@ -47,18 +66,17 @@ export default function PageAvatar({
         } catch (error) {
             console.error('Error checking username:', error)
         } finally {
-            setAvatarDeleteLoading(true)
+            setAvatarDeleteLoading(false)
         }
     }
     return (
         <>
             {avatarURL ? (
                 <div className="w-full h-[160px] relative">
-                    {avatarURL}
                     <Image
                         src={avatarURL}
                         fill
-                        className="rounded-lg pointer-events-none select-none"
+                        className="rounded-lg pointer-events-none select-none border"
                         alt="Avatar Image"
                     />
                     <div
@@ -84,12 +102,25 @@ export default function PageAvatar({
                     }}
                     content={{}}
                     endpoint="imageUploader"
+                    onBeforeUploadBegin={(files) => {
+                        // Preprocess files before uploading (e.g. rename them)
+                        return files.map((f) => {
+                            const renamedFile = new File(
+                                [f],
+                                `avatar-${username}.${f.name.split('.').pop()}`,
+                                {
+                                    type: f.type,
+                                }
+                            )
+                            return renamedFile
+                        })
+                    }}
                     onClientUploadComplete={(res) => {
                         setAvatarURL(res[0].url)
                         uploadAvatar(res[0].url)
                     }}
                     onUploadError={(error: Error) => {
-                        alert(`ERROR! ${error.message}`)
+                        toast('Something went wrong')
                     }}
                 />
             )}
