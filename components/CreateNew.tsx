@@ -59,7 +59,9 @@ const CreateNewButton = () => {
             if (response.ok) {
                 toast.success('Biolink created!')
                 setTimeout(() => {
-                    router.push('/dashboard/edit/' + values.username)
+                    router.push(
+                        '/dashboard/edit/' + values.username + '/profile'
+                    )
                 }, 1500)
             } else {
                 toast.error('Something went wrong')

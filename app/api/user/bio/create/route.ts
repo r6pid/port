@@ -71,6 +71,8 @@ export async function POST(req: Request, res: Response) {
                             bio: 'Welcome to my profile!',
                             verified: false,
                             rareUsername: false,
+                            avatar: '/avatar.png',
+                            background: '/background.png',
                         },
                     ],
                 },
