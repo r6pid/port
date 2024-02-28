@@ -22,22 +22,22 @@ export default function PageBackground({
         if (backgroundDeleteLoading) return
         try {
             setBackgroundDeleteLoading(true)
-            const response = await fetch('/api/user/bio/edit/background', {
-                method: 'POST',
+            const response = await fetch('/api/user/bio/edit/avatar', {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     username: username,
-                    backgroundURL: null,
+                    backgroundURL: backgroundURL,
                 }),
             })
             const responseJson = await response.json()
-            if (response.ok) {
-                toast.success('Background Deleted')
-            } else {
+            if (!response.ok) {
                 toast.error('Something went wrong')
                 console.error(responseJson.message)
+            } else {
+                toast.success('Avatar Deleted')
             }
         } catch (error) {
             console.error('Error checking username:', error)
@@ -104,6 +104,19 @@ export default function PageBackground({
                         allowedContent: { display: 'none' },
                     }}
                     endpoint="imageUploader"
+                    onBeforeUploadBegin={(files) => {
+                        // Preprocess files before uploading (e.g. rename them)
+                        return files.map((f) => {
+                            const renamedFile = new File(
+                                [f],
+                                `background-${username}.${f.name.split('.').pop()}`,
+                                {
+                                    type: f.type,
+                                }
+                            )
+                            return renamedFile
+                        })
+                    }}
                     onClientUploadComplete={(res) => {
                         setBackgroundURL(res[0].url)
                         uploadBackground(res[0].url)
