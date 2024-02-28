@@ -76,7 +76,7 @@ export default function PageAvatar({
                     <Image
                         src={avatarURL}
                         fill
-                        className="rounded-lg pointer-events-none select-none border"
+                        className="rounded-lg pointer-events-none select-none border object-cover"
                         alt="Avatar Image"
                     />
                     <div

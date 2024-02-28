@@ -22,7 +22,7 @@ export default function PageBackground({
         if (backgroundDeleteLoading) return
         try {
             setBackgroundDeleteLoading(true)
-            const response = await fetch('/api/user/bio/edit/avatar', {
+            const response = await fetch('/api/user/bio/edit/background', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,12 +38,12 @@ export default function PageBackground({
                 console.error(responseJson.message)
             } else {
                 toast.success('Avatar Deleted')
+                setBackgroundURL(null)
             }
         } catch (error) {
             console.error('Error checking username:', error)
         } finally {
-            setBackgroundDeleteLoading(true)
-            setBackgroundURL(null)
+            setBackgroundDeleteLoading(false)
         }
     }
     const uploadBackground = async (URL: string) => {
@@ -79,7 +79,7 @@ export default function PageBackground({
                     <Image
                         fill
                         src={backgroundURL}
-                        className="rounded-lg pointer-events-none select-none border"
+                        className="rounded-lg pointer-events-none select-none border object-cover"
                         alt="Background Image"
                     />
                     <div
@@ -122,7 +122,8 @@ export default function PageBackground({
                         uploadBackground(res[0].url)
                     }}
                     onUploadError={(error: Error) => {
-                        toast('Something went wrong')
+                        toast(JSON.stringify(error))
+                        console.log(JSON.stringify(error))
                     }}
                 />
             )}
