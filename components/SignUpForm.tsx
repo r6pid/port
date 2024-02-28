@@ -75,7 +75,10 @@ export default function SignUpForm() {
                 console.log(signInData.error)
                 setIsLoading(false)
             }
-            router.push('/dashboard')
+            if (signInData?.ok) {
+                router.push('/dashboard')
+                setIsLoading(false)
+            }
         } catch (error) {
             toast(JSON.stringify(error))
             console.log(error)

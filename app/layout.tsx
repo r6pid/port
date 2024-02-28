@@ -28,7 +28,7 @@ export default function RootLayout({
             >
                 <NextAuthSessionProvider>
                     <Navbar />
-                    <main className="mx-auto md:max-w-screen-sm px-10">
+                    <main className="mx-auto md:max-w-screen-md px-10">
                         {children}
                     </main>
                     <Toaster richColors expand duration={2000} />
