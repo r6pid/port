@@ -139,11 +139,11 @@ export default function LoginForm() {
                             Sign In
                         </Button>
                     )}
-                    <p className="text-sm font-semibold text-neutral-400 mt-4">
+                    <p className="text-sm text-neutral-400 mt-4">
                         Don't have an account?
                         <Link
                             href="/signup"
-                            className="ml-1.5 text-primary font-semibold hover:underline"
+                            className="ml-1.5 text-white text-primaryhover:underline"
                         >
                             Sign Up
                         </Link>

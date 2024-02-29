@@ -106,7 +106,7 @@ const CreateNewButton = () => {
                         {isLoading ? (
                             <Button
                                 disabled
-                                variant="default"
+                                variant="secondary"
                                 className="mt-4 disabled w-full"
                                 type="submit"
                             >

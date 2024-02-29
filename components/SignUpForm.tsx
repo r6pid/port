@@ -175,11 +175,11 @@ export default function SignUpForm() {
                             Sign Up
                         </Button>
                     )}
-                    <p className="text-sm font-semibold text-neutral-400 mt-4">
+                    <p className="text-sm text-neutral-400 mt-4">
                         Already have an account?
                         <Link
                             href="/login"
-                            className="ml-1.5 text-primary font-semibold hover:underline"
+                            className="ml-1.5 text-white hover:underline"
                         >
                             Login
                         </Link>

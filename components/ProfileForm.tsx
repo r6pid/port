@@ -93,7 +93,7 @@ export default function ProfileForm({
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full mt-10 space-y-2"
+                className="w-full mt-16 space-y-2"
             >
                 <div className="w-full flex md:items-center items-start md:justify-start justify-center flex-col md:flex-row gap-4 mb-8">
                     <div className="flex flex-col w-full md:w-[27%] items-start justify-center">
