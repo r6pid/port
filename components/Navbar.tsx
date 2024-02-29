@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession, signOut, getSession } from 'next-auth/react'
+import { useEffect } from 'react'
 import { Button } from './ui/button'
 import { Montserrat } from 'next/font/google'
 import { cn } from '../lib/utils'
@@ -9,7 +10,8 @@ import { cn } from '../lib/utils'
 const montserrat = Montserrat({ weight: '900', subsets: ['latin'] })
 
 const Navbar = () => {
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
+
     return (
         <nav className="sticky top-0 z-50 inset-x-0">
             <div className="border-b bg-neutral-900 w-full">
@@ -26,15 +28,16 @@ const Navbar = () => {
                         </Link>
                     </div>
                     <div className="hidden z-5 md:flex justify-end items-center gap-2">
-                        {session && (
+                        {status === 'loading' ? (
+                            <p className="text-sm">Loading...</p>
+                        ) : session ? (
                             <Button
                                 variant="destructive"
                                 onClick={() => signOut()}
                             >
                                 Sign Out
                             </Button>
-                        )}
-                        {!session && (
+                        ) : (
                             <>
                                 <Button asChild variant="default">
                                     <Link href="/login">Login</Link>

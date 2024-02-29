@@ -1,16 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from './ui/button'
 import {
     Dialog,
-    DialogPortal,
-    DialogOverlay,
-    DialogClose,
     DialogTrigger,
     DialogContent,
     DialogHeader,
-    DialogFooter,
     DialogTitle,
     DialogDescription,
 } from './ui/dialog'
@@ -59,9 +55,7 @@ const CreateNewButton = () => {
             if (response.ok) {
                 toast.success('Biolink created!')
                 setTimeout(() => {
-                    router.push(
-                        '/dashboard/edit/' + values.username + '/profile'
-                    )
+                    router.push(`/dashboard/edit/${values.username}/profile`)
                 }, 1500)
             } else {
                 toast.error('Something went wrong')
@@ -71,6 +65,7 @@ const CreateNewButton = () => {
             console.error('Error checking username:', error)
         } finally {
             setIsLoading(false)
+            return
         }
     }
     return (
