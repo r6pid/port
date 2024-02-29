@@ -122,7 +122,7 @@ export default function PageBackground({
                         uploadBackground(res[0].url)
                     }}
                     onUploadError={(error: Error) => {
-                        toast(JSON.stringify(error))
+                        toast.error(JSON.stringify(error))
                         console.log(JSON.stringify(error))
                     }}
                 />

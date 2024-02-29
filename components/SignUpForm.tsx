@@ -62,7 +62,7 @@ export default function SignUpForm() {
             })
             const responseJson = await response.json()
             if (!response.ok) {
-                toast(responseJson.message)
+                toast.error(responseJson.message)
                 return setIsLoading(false)
             }
             const signInData = await signIn('credentials', {
@@ -71,16 +71,17 @@ export default function SignUpForm() {
                 redirect: false,
             })
             if (signInData?.error) {
-                toast(signInData.error)
+                toast.error(signInData.error)
                 console.log(signInData.error)
                 setIsLoading(false)
             }
+            toast.success('Welcome to Port!')
             if (signInData?.ok) {
                 router.push('/dashboard')
                 setIsLoading(false)
             }
         } catch (error) {
-            toast(JSON.stringify(error))
+            toast.error(JSON.stringify(error))
             console.log(error)
             setIsLoading(false)
         }

@@ -18,13 +18,14 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader, Router, Upload, X } from 'lucide-react'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { Textarea } from '../../../../../components/ui/textarea'
 import { UploadButton } from '../../../../../lib/utils'
 import PageAvatar from '../../../../../components/PageAvatar'
 import PageBackground from '../../../../../components/PageBackground'
 import TabNav from '../../../../../components/TabNav'
 import { useQuery } from '@tanstack/react-query'
+import { useSession } from 'next-auth/react'
 
 const FormSchema = z.object({
     avatar: z.string().optional(),
@@ -40,6 +41,10 @@ export default function ProfileTab({
 }: {
     params: { username: string }
 }) {
+    const { data: session, status } = useSession()
+    if (!session) {
+        return redirect('/login')
+    }
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {

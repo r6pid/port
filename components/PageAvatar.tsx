@@ -120,7 +120,7 @@ export default function PageAvatar({
                         uploadAvatar(res[0].url)
                     }}
                     onUploadError={(error: Error) => {
-                        toast('Something went wrong')
+                        toast.error('Something went wrong')
                     }}
                 />
             )}

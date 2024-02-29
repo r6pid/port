@@ -51,11 +51,12 @@ export default function LoginForm() {
                 setIsLoading(false)
             }
             if (signInData?.ok) {
+                toast.success('Welcome back!')
                 router.push('/dashboard')
                 setIsLoading(false)
             }
         } catch (error) {
-            toast(JSON.stringify(error))
+            toast.error(JSON.stringify(error))
             console.log(error)
             setIsLoading(false)
         }

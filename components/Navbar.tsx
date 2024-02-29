@@ -33,7 +33,7 @@ const Navbar = () => {
                         ) : session ? (
                             <Button
                                 variant="destructive"
-                                onClick={() => signOut()}
+                                onClick={() => signOut({ redirect: false })}
                             >
                                 Sign Out
                             </Button>

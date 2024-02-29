@@ -40,17 +40,17 @@ export default function BioLink({ b }: { b: Bio }) {
             })
             const data = await res.json()
             if (!res.ok) {
-                toast(data.message)
+                toast.error(data.message)
                 setLoading(false)
                 setOpen(false)
             } else {
-                toast('Deleted: @' + id)
+                toast.success('Deleted: @' + id)
                 setLoading(false)
                 setOpen(false)
                 location.reload()
             }
         } catch (error) {
-            toast(JSON.stringify(error))
+            toast.error(JSON.stringify(error))
             console.log(error)
             setLoading(false)
             return
