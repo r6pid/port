@@ -44,8 +44,10 @@ export async function POST(req: Request, res: Response) {
         const existingUserbyUsername = await db.user.findUnique({
             where: { username: username },
         })
-        if (existingUserbyUsername) {
-            console.log('username already exists')
+        const existingBiobyUsername = await db.bio.findUnique({
+            where: { id: username },
+        })
+        if (existingUserbyUsername || existingBiobyUsername) {
             return NextResponse.json(
                 {
                     user: null,
@@ -75,6 +77,17 @@ export async function POST(req: Request, res: Response) {
                 username,
                 email,
                 password: hashed_password,
+                bio: {
+                    create: {
+                        id: username,
+                        displayName: username,
+                        bio: 'Welcome to my biolink!',
+                        verified: false,
+                        rareUsername: false,
+                        avatar: '/avatar.png',
+                        background: '/background.png',
+                    },
+                },
             },
         })
 

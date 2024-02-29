@@ -7,7 +7,7 @@ import { Loader } from 'lucide-react'
 import TabNav from '../../../../../components/TabNav'
 import { Loading } from '../../../../../components/Loading'
 import { Suspense } from 'react'
-import AccountForm from '../../../../../components/AccountForm'
+import AccountForm from '../../../../../components/forms/AccountForm'
 
 export default async function LinksTab({
     params,
@@ -24,6 +24,7 @@ export default async function LinksTab({
               include: { bio: true },
           })
         : null
+    console.log(user)
     return (
         <div className="min-h-[calc(100dvh-65px)] py-12">
             <TabNav username={params.username} activeTab={'account'} />

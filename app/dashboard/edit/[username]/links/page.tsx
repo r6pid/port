@@ -5,10 +5,10 @@ import { redirect } from 'next/navigation'
 import { db } from '../../../../../lib/db'
 import { Loader } from 'lucide-react'
 import TabNav from '../../../../../components/TabNav'
-import ProfileForm from '../../../../../components/ProfileForm'
+import ProfileForm from '../../../../../components/forms/ProfileForm'
 import { Loading } from '../../../../../components/Loading'
 import { Suspense } from 'react'
-import LinksForm from '../../../../../components/LinksForm'
+import LinksForm from '../../../../../components/forms/LinksForm'
 
 export default async function LinksTab({
     params,

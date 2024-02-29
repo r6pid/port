@@ -1,40 +1,65 @@
-'use server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../../../../../lib/auth'
+'use client'
 import { redirect } from 'next/navigation'
-import { db } from '../../../../../lib/db'
 import { Loader } from 'lucide-react'
 import TabNav from '../../../../../components/TabNav'
-import ProfileForm from '../../../../../components/ProfileForm'
+import ProfileForm from '../../../../../components/forms/ProfileForm'
 import { Loading } from '../../../../../components/Loading'
-import { Suspense } from 'react'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
-export default async function ProfileTab({
+interface BioData {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    displayName: string | null
+    bio: string | null
+    verified: boolean | null
+    rareUsername: boolean
+    avatar: string | null
+    background: string | null
+    userId: string
+}
+
+export default function ProfileTab({
     params,
 }: {
     params: { username: string }
 }) {
-    const session = await getServerSession(authOptions)
-    if (!session) {
-        redirect('/login')
-    }
-    const user = session.user.email
-        ? await db.user.findUnique({
-              where: { email: session.user.email },
-              include: { bio: true },
-          })
-        : null
-    const bio = user?.bio.find((b) => b.id === params.username)
-
-    if (!bio || bio.userId !== user?.id || !user || !session) {
-        redirect('/dashboard')
-    }
+    const [bio, setBio] = useState<BioData | null>(null)
+    const [isLoading, setLoading] = useState(true)
+    useEffect(() => {
+        const fetchBio = async () => {
+            try {
+                setLoading(true)
+                const response = await fetch(
+                    `/api/user/bio/edit/profile/${params.username}`
+                )
+                const responseJSON = await response.json()
+                if (!response.ok) {
+                    console.error(responseJSON.message)
+                    toast.error('Something went wrong')
+                    setLoading(false)
+                    return
+                } else {
+                    setBio(responseJSON.bio[0])
+                }
+            } catch (error) {
+                console.error(error)
+                toast.error('Something went wrong')
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchBio()
+    }, [])
     return (
         <div className="min-h-[calc(100dvh-65px)] py-12">
             <TabNav username={params.username} activeTab={'profile'} />
-            <Suspense fallback={<Loading />}>
+            {isLoading && !bio ? (
+                <Loading />
+            ) : (
                 <ProfileForm username={params.username} bio={bio} />
-            </Suspense>
+            )}
         </div>
     )
 }

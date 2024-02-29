@@ -1,7 +1,7 @@
 'use client'
 
-import { Button } from './ui/button'
-import { Input } from './ui/input'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 import { useForm } from 'react-hook-form'
 import {
     Form,
@@ -10,16 +10,16 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from './ui/form'
+} from '../ui/form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader, Router, Upload, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { redirect, useRouter } from 'next/navigation'
-import { Textarea } from './ui/textarea'
-import PageAvatar from './PageAvatar'
-import PageBackground from './PageBackground'
-import TabNav from './TabNav'
+import { Textarea } from '../ui/textarea'
+import PageAvatar from '../PageAvatar'
+import PageBackground from '../PageBackground'
+import TabNav from '../TabNav'
 import { useQuery } from '@tanstack/react-query'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
@@ -46,7 +46,7 @@ const FormSchema = z.object({
 //     userId: string
 // }
 
-export default function LinksForm({
+export default function AccountForm({
     username,
     // bio,
 }: {
@@ -62,7 +62,7 @@ export default function LinksForm({
     //     },
     // })
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {}
-    return <p>Links Form</p>
+    return <p>Account Form</p>
     // return (
     //     <Form {...form}>
     //         <form

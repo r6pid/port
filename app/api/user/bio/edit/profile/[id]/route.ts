@@ -1,14 +1,14 @@
-import { db } from '../../../../../../lib/db'
+import { db } from '../../../../../../../lib/db'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
-import { authOptions } from '../../../../../../lib/auth'
+import { authOptions } from '../../../../../../../lib/auth'
 
 export async function GET(
     req: Request,
     { params }: { params: { id: string } }
 ) {
     const session = await getServerSession(authOptions)
-    if (!session) {
+    if (!session || !session.user.email) {
         return NextResponse.json(
             {
                 message: 'Unauthorized',
@@ -16,18 +16,24 @@ export async function GET(
             { status: 401 }
         )
     }
-    const bio = await db.bio.findUnique({ where: { id: params.id } })
-    if (!bio) {
+    const user = await db.user.findUnique({
+        where: { email: session.user.email },
+        include: {
+            bio: true,
+        },
+    })
+    if (!user || !user.bio.some((bio) => bio.id === params.id)) {
         return NextResponse.json(
             {
-                message: 'Not found',
+                message: 'Unauthorized',
             },
-            { status: 404 }
+            { status: 401 }
         )
     }
+
     return NextResponse.json(
         {
-            bio: bio,
+            bio: user.bio,
             message: 'Success',
         },
         { status: 200 }
