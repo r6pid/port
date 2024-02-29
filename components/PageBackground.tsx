@@ -37,7 +37,7 @@ export default function PageBackground({
                 toast.error('Something went wrong')
                 console.error(responseJson.message)
             } else {
-                toast.success('Avatar Deleted')
+                toast.success('Background Deleted')
                 setBackgroundURL(null)
             }
         } catch (error) {
