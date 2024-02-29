@@ -15,7 +15,7 @@ const Navbar = () => {
     return (
         <nav className="sticky top-0 z-50 inset-x-0">
             <div className="border-b bg-neutral-900 w-full">
-                <div className="grid h-16 items-center grid-cols-2 md:grid-cols-2 grid-flow-row mx-auto w-full max-w-screen-2xl px-4 md:px-20">
+                <div className="grid h-16 items-center grid-cols-2 md:grid-cols-2 grid-flow-row mx-auto w-full max-w-screen-2xl px-6 md:px-20">
                     <div className="flex lg:ml-0 w-11">
                         <Link
                             href="/"
@@ -27,12 +27,12 @@ const Navbar = () => {
                             Port.
                         </Link>
                     </div>
-                    <div className="hidden z-5 md:flex justify-end items-center gap-2">
+                    <div className="z-5 flex justify-end items-center gap-2">
                         {status === 'loading' ? (
                             <p className="text-sm">Loading...</p>
                         ) : session ? (
                             <>
-                                <Button asChild variant="link" className="mr-3">
+                                <Button asChild variant="link" className="">
                                     <Link href="/dashboard">Dashboard</Link>
                                 </Button>
                                 <Button

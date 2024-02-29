@@ -80,14 +80,17 @@ export default function BioLink({ b }: { b: Bio }) {
                         />
                     )}
                 </div>
-                <div className="flex items-start justify-center flex-col ml-4">
-                    <p className="text-lg ">{b.displayName}</p>
-                    <p className="text-sm text-neutral-400 line-clamp-2">
-                        {b.bio}
+                <div className="flex items-start justify-center flex-col ml-3">
+                    <p className="text-lg sm:text-xl">
+                        {b.displayName.slice(0, 12) +
+                            (b.bio.length > 12 ? '...' : '')}
+                    </p>
+                    <p className="text-sm text-neutral-400 line-clamp-1 sm:line-clamp-none">
+                        {b.bio.slice(0, 20) + (b.bio.length > 20 ? '...' : '')}
                     </p>
                 </div>
             </div>
-            <div className="w-full flex items-center justify-center">
+            <div className="w-full flex items-center justify-center mt-1">
                 <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
                         <Button

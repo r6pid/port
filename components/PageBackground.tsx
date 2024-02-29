@@ -75,7 +75,7 @@ export default function PageBackground({
     return (
         <>
             {backgroundURL ? (
-                <div className="w-full h-[160px] relative">
+                <div className="w-full h-[170px] relative">
                     <Image
                         fill
                         src={backgroundURL}
@@ -98,7 +98,7 @@ export default function PageBackground({
                     appearance={{
                         container: {
                             width: '100%',
-                            height: '160px',
+                            height: '170px',
                         },
                         button: { width: '100%', height: '100%' },
                         allowedContent: { display: 'none' },
