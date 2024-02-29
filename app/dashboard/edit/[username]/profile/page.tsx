@@ -1,197 +1,40 @@
-'use client'
-
-import { Button } from '../../../../../components/ui/button'
-import { Input } from '../../../../../components/ui/input'
-import { useForm } from 'react-hook-form'
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from '../../../../../components/ui/form'
-import * as z from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader, Router, Upload, X } from 'lucide-react'
-import { toast } from 'sonner'
-import { redirect, useRouter } from 'next/navigation'
-import { Textarea } from '../../../../../components/ui/textarea'
-import PageAvatar from '../../../../../components/PageAvatar'
-import PageBackground from '../../../../../components/PageBackground'
+'use server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../../../../../lib/auth'
+import { redirect } from 'next/navigation'
+import { db } from '../../../../../lib/db'
+import { Loader } from 'lucide-react'
 import TabNav from '../../../../../components/TabNav'
-import { useQuery } from '@tanstack/react-query'
-import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import ProfileForm from '../../../../../components/ProfileForm'
+import { Loading } from '../../../../../components/Loading'
+import { Suspense } from 'react'
 
-const FormSchema = z.object({
-    avatar: z.string().optional(),
-    display_name: z
-        .string()
-        .max(36, 'Display name  must be less than 36 chars')
-        .optional(),
-    bio: z.string().max(255, 'Bio must be less than 255 chars').optional(),
-})
-
-export default function ProfileTab({
+export default async function ProfileTab({
     params,
 }: {
     params: { username: string }
 }) {
-    const { data: session, status } = useSession()
-    if (!session && status === 'unauthenticated') {
-        return redirect('/login')
+    const session = await getServerSession(authOptions)
+    if (!session) {
+        redirect('/login')
     }
-    const fetchBio = async () => {
-        try {
-            const response = await fetch(
-                `/api/user/bio/edit/${params.username}`
-            )
-            const responseJson = await response.json()
-            if (!response.ok) {
-                console.error(responseJson.message)
-                toast.error('Something went wrong')
-            }
-            return responseJson
-        } catch (error) {
-            console.error('Error fetching bio: ', error)
-        }
+    const user = session.user.email
+        ? await db.user.findUnique({
+              where: { email: session.user.email },
+              include: { bio: true },
+          })
+        : null
+    const bio = user?.bio.find((b) => b.id === params.username)
+
+    if (!bio || bio.userId !== user?.id || !user || !session) {
+        redirect('/dashboard')
     }
-    const { isLoading, error, data } = useQuery({
-        queryKey: ['bioData'],
-        queryFn: fetchBio,
-    })
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-        defaultValues: {
-            display_name: '',
-            bio: '',
-        },
-    })
-    useEffect(() => {
-        // Set the form values once the data is available
-        if (data) {
-            form.setValue('display_name', data.bio.displayName)
-            form.setValue('bio', data.bio.bio)
-            // Add more fields as needed
-        }
-    }, [data, form.setValue])
-    const [formIsLoading, setFormIsLoading] = useState(false)
-    const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-        try {
-            setFormIsLoading(true)
-            const response = await fetch('/api/user/bio/edit/profile', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: params.username,
-                    display_name: values.display_name,
-                    bio: values.bio,
-                }),
-            })
-            const responseJson = await response.json()
-            if (response.ok) {
-                toast.success('Profile Updated')
-            } else {
-                toast.error('Something went wrong')
-                console.error(responseJson.message)
-            }
-        } catch (error) {
-            console.error('Error updating profile:', error)
-        } finally {
-            setFormIsLoading(false)
-            return
-        }
-    }
-    if (isLoading)
-        return (
-            <div className="absolute left-0 top-0 z-40 w-screen h-screen bg-[#0A0A0A] flex items-center justify-center">
-                <Loader className="w-8 h-8 animate-spin" />
-            </div>
-        )
     return (
         <div className="min-h-[calc(100dvh-65px)] py-12">
             <TabNav username={params.username} activeTab={'profile'} />
-            <Form {...form}>
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="w-full mt-10 space-y-2"
-                >
-                    <div className="w-full flex md:items-center items-start md:justify-start justify-center flex-col md:flex-row gap-4 mb-8">
-                        <div className="flex flex-col w-full md:w-[27%] items-start justify-center">
-                            <p className="mb-[8px] text-sm">Avatar</p>
-                            <PageAvatar
-                                defaultURL={data.bio.avatar}
-                                username={params.username}
-                            />
-                        </div>
-                        <div className="flex flex-col w-full md:w-[73%] items-start justify-center">
-                            <p className="mb-[8px] text-sm">Background</p>
-                            <PageBackground
-                                defaultURL={data.bio.background}
-                                username={params.username}
-                            />
-                        </div>
-                    </div>
-                    <FormField
-                        control={form.control}
-                        name="display_name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Display Name</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        className="w-full"
-                                        placeholder="John Doe"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="bio"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Bio</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        className="w-full"
-                                        placeholder="I'm a cool person"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <div>
-                        {isLoading || formIsLoading ? (
-                            <Button
-                                disabled
-                                variant="default"
-                                className="mt-4 disabled w-full"
-                                type="submit"
-                            >
-                                <Loader className="h-4 w-4 mr-2 animate-spin" />
-                                Save
-                            </Button>
-                        ) : (
-                            <Button
-                                variant="default"
-                                className="mt-4 w-full"
-                                type="submit"
-                            >
-                                Save
-                            </Button>
-                        )}
-                    </div>
-                </form>
-            </Form>
+            <Suspense fallback={<Loading />}>
+                <ProfileForm username={params.username} bio={bio} />
+            </Suspense>
         </div>
     )
 }
