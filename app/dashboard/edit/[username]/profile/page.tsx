@@ -1,17 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { Button } from '../../../../../components/ui/button'
 import { Input } from '../../../../../components/ui/input'
 import { useForm } from 'react-hook-form'
-import Image from 'next/image'
 import {
     Form,
     FormControl,
     FormField,
     FormItem,
     FormLabel,
-    FormDescription,
     FormMessage,
 } from '../../../../../components/ui/form'
 import * as z from 'zod'
@@ -20,12 +17,12 @@ import { Loader, Router, Upload, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { redirect, useRouter } from 'next/navigation'
 import { Textarea } from '../../../../../components/ui/textarea'
-import { UploadButton } from '../../../../../lib/utils'
 import PageAvatar from '../../../../../components/PageAvatar'
 import PageBackground from '../../../../../components/PageBackground'
 import TabNav from '../../../../../components/TabNav'
 import { useQuery } from '@tanstack/react-query'
 import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
 
 const FormSchema = z.object({
     avatar: z.string().optional(),
@@ -42,20 +39,9 @@ export default function ProfileTab({
     params: { username: string }
 }) {
     const { data: session, status } = useSession()
-    if (!session) {
+    if (!session && status === 'unauthenticated') {
         return redirect('/login')
     }
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-        defaultValues: {
-            avatar: '',
-            display_name: '',
-            bio: '',
-        },
-    })
-    // const [isLoading, setIsLoading] = useState(false)
-    const router = useRouter()
-    const onSubmit = async (values: z.infer<typeof FormSchema>) => {}
     const fetchBio = async () => {
         try {
             const response = await fetch(
@@ -75,6 +61,50 @@ export default function ProfileTab({
         queryKey: ['bioData'],
         queryFn: fetchBio,
     })
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            display_name: '',
+            bio: '',
+        },
+    })
+    useEffect(() => {
+        // Set the form values once the data is available
+        if (data) {
+            form.setValue('display_name', data.bio.displayName)
+            form.setValue('bio', data.bio.bio)
+            // Add more fields as needed
+        }
+    }, [data, form.setValue])
+    const [formIsLoading, setFormIsLoading] = useState(false)
+    const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+        try {
+            setFormIsLoading(true)
+            const response = await fetch('/api/user/bio/edit/profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: params.username,
+                    display_name: values.display_name,
+                    bio: values.bio,
+                }),
+            })
+            const responseJson = await response.json()
+            if (response.ok) {
+                toast.success('Profile Updated')
+            } else {
+                toast.error('Something went wrong')
+                console.error(responseJson.message)
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error)
+        } finally {
+            setFormIsLoading(false)
+            return
+        }
+    }
     if (isLoading)
         return (
             <div className="absolute left-0 top-0 z-40 w-screen h-screen bg-[#0A0A0A] flex items-center justify-center">
@@ -141,7 +171,7 @@ export default function ProfileTab({
                             )}
                         />
                         <div>
-                            {isLoading ? (
+                            {isLoading || formIsLoading ? (
                                 <Button
                                     disabled
                                     variant="default"
@@ -149,7 +179,7 @@ export default function ProfileTab({
                                     type="submit"
                                 >
                                     <Loader className="h-4 w-4 mr-2 animate-spin" />
-                                    Create
+                                    Save
                                 </Button>
                             ) : (
                                 <Button

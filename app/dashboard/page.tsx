@@ -1,11 +1,8 @@
 import { getServerSession } from 'next-auth'
-import Image from 'next/image'
 import { authOptions } from '../../lib/auth'
 import { redirect } from 'next/navigation'
 import CreateNewButton from '../../components/CreateNew'
 import { db } from '../../lib/db'
-import { Button } from '../../components/ui/button'
-import Link from 'next/link'
 import BioLink from '../../components/DashboardBio'
 
 export default async function Dashboard() {

@@ -31,12 +31,17 @@ const Navbar = () => {
                         {status === 'loading' ? (
                             <p className="text-sm">Loading...</p>
                         ) : session ? (
-                            <Button
-                                variant="destructive"
-                                onClick={() => signOut({ redirect: false })}
-                            >
-                                Sign Out
-                            </Button>
+                            <>
+                                <Button asChild variant="link" className="mr-3">
+                                    <Link href="/dashboard">Dashboard</Link>
+                                </Button>
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => signOut({ redirect: false })}
+                                >
+                                    Sign Out
+                                </Button>
+                            </>
                         ) : (
                             <>
                                 <Button asChild variant="default">
