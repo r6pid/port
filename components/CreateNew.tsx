@@ -24,6 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader, Router } from 'lucide-react'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 const FormSchema = z.object({
     username: z
@@ -41,6 +42,7 @@ const CreateNewButton = () => {
     })
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
+    const { update, data: session } = useSession()
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
         try {
             setIsLoading(true)
@@ -54,9 +56,13 @@ const CreateNewButton = () => {
             const responseJson = await response.json()
             if (response.ok) {
                 toast.success('Biolink created!')
-                setTimeout(() => {
-                    router.push(`/dashboard/edit/${values.username}/profile`)
-                }, 1500)
+                update({
+                    ...session,
+                    user: {
+                        ...session?.user,
+                        bios: session?.user?.bios.push(values.username),
+                    },
+                })
             } else {
                 toast.error('Something went wrong')
                 console.error(responseJson.message)
@@ -65,7 +71,6 @@ const CreateNewButton = () => {
             console.error('Error checking username:', error)
         } finally {
             setIsLoading(false)
-            return
         }
     }
     return (
