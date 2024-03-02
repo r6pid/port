@@ -50,6 +50,7 @@ CREATE TABLE "User" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "email" TEXT,
     "emailVerified" TIMESTAMP(3),
+    "name" TEXT,
     "image" TEXT,
     "isAdmin" BOOLEAN NOT NULL DEFAULT false,
 
