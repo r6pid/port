@@ -7,12 +7,11 @@ import { db } from '../../../lib/db'
 const f = createUploadthing()
 const getUser = async () => {
     const session = await getServerSession(authOptions)
-    if (!session || !session.user.email)
-        throw new UploadThingError('Unauthorized')
+    if (!session) throw new UploadThingError('Unauthorized')
+    if (!session) throw new UploadThingError('Unauthorized')
     const user = await db.user.findUnique({
-        where: { email: session.user.email },
+        where: { id: session.user?.id },
     })
-    if (!user) throw new UploadThingError('Unauthorized')
     return user
 }
 const auth = async (req: Request) => await getUser()
@@ -24,11 +23,11 @@ export const ourFileRouter = {
 
             if (!user) throw new UploadThingError('Unauthorized')
 
-            return { username: user.username }
+            return { id: user.id }
         })
         .onUploadComplete(async ({ metadata, file }) => {
-            console.log(file.name, 'was uploaded by:', metadata.username)
-            return { uploadedBy: metadata.username }
+            console.log(file.name, 'was uploaded by:', metadata.id)
+            return { uploadedBy: metadata.id }
         }),
 } satisfies FileRouter
 
