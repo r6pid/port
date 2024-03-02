@@ -2,7 +2,6 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { db } from './db'
-import { compare } from 'bcrypt'
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
@@ -16,6 +15,7 @@ export const authOptions: NextAuthOptions = {
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
             allowDangerousEmailAccountLinking: true,
+            checks: ['none'],
         }),
     ],
     callbacks: {

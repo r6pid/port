@@ -6,7 +6,7 @@ import { db } from '../../../../../lib/db'
 import TabNav from '../../../../../components/TabNav'
 import { Loading } from '../../../../../components/Loading'
 import { Suspense } from 'react'
-import LinksForm from '../../../../../components/dashboard/LinksForm'
+import LinksForm from '../../../../../components/dashboard/links/LinksForm'
 
 export default async function LinksTab({
     params,

@@ -68,6 +68,7 @@ export async function DELETE(request: Request) {
         const bio = await db.bio.update({
             where: { id: username },
             data: {
+                updatedAt: new Date(),
                 avatar: null,
             },
         })

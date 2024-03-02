@@ -36,7 +36,9 @@ const Navbar = () => {
                                 </Button>
                                 <Button
                                     variant="destructive"
-                                    onClick={() => signOut({ redirect: false })}
+                                    onClick={() =>
+                                        signOut({ callbackUrl: '/' })
+                                    }
                                 >
                                     Sign Out
                                 </Button>

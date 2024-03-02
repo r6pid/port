@@ -19,9 +19,9 @@ import { Textarea } from '@/components/ui/textarea'
 import PageAvatar from '@/components/PageAvatar'
 import PageBackground from '@/components/PageBackground'
 import { useState } from 'react'
+import { Bio } from '@prisma/client'
 
 const FormSchema = z.object({
-    avatar: z.string().optional(),
     display_name: z
         .string()
         .max(36, 'Display name  must be less than 36 chars')
@@ -29,25 +29,12 @@ const FormSchema = z.object({
     bio: z.string().max(255, 'Bio must be less than 255 chars').optional(),
 })
 
-interface BioData {
-    id: string
-    createdAt: Date
-    updatedAt: Date
-    displayName: string | null
-    bio: string | null
-    verified: boolean | null
-    rareUsername: boolean
-    avatar: string | null
-    background: string | null
-    userId: string
-}
-
 export default function ProfileForm({
     username,
     bio,
 }: {
     username: string
-    bio: BioData
+    bio: Bio
 }) {
     const [formIsLoading, setFormIsLoading] = useState(false)
     const form = useForm<z.infer<typeof FormSchema>>({

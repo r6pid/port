@@ -58,7 +58,7 @@ function BioLink({ b }: { b: Bio }) {
 
             <div className="flex items-start justify-center flex-col ml-[1.15rem] w-full">
                 <p className="text-lg sm:text-xl break-all line-clamp-1">
-                    {b.displayName}
+                    @{b.id}
                 </p>
 
                 <p className="text-sm text-neutral-400 line-clamp-2 break-all">

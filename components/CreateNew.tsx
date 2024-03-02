@@ -41,7 +41,6 @@ const CreateNewButton = () => {
         },
     })
     const [isLoading, setIsLoading] = useState(false)
-    const router = useRouter()
     const { update, data: session } = useSession()
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
         try {
@@ -64,7 +63,7 @@ const CreateNewButton = () => {
                     },
                 })
             } else {
-                toast.error('Something went wrong')
+                toast.error(responseJson.message)
                 console.error(responseJson.message)
             }
         } catch (error) {
