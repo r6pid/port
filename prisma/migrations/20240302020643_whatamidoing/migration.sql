@@ -45,11 +45,9 @@ CREATE TABLE "Bio" (
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "username" TEXT,
     "password" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "name" TEXT,
     "email" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
@@ -73,9 +71,6 @@ CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Bio_id_key" ON "Bio"("id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");

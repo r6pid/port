@@ -1,7 +1,7 @@
 'use client'
 
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form'
 import {
     Form,
@@ -10,19 +10,15 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '../ui/form'
+} from '@/components/ui/form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader, Router, Upload, X } from 'lucide-react'
+import { Loader } from 'lucide-react'
 import { toast } from 'sonner'
-import { redirect, useRouter } from 'next/navigation'
-import { Textarea } from '../ui/textarea'
-import PageAvatar from '../PageAvatar'
-import PageBackground from '../PageBackground'
-import TabNav from '../TabNav'
-import { useQuery } from '@tanstack/react-query'
-import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { Textarea } from '@/components/ui/textarea'
+import PageAvatar from '@/components/PageAvatar'
+import PageBackground from '@/components/PageBackground'
+import { useState } from 'react'
 
 const FormSchema = z.object({
     avatar: z.string().optional(),
@@ -51,11 +47,8 @@ export default function ProfileForm({
     bio,
 }: {
     username: string
-    bio: BioData | null
+    bio: BioData
 }) {
-    if (!bio) {
-        return redirect('/dashboard')
-    }
     const [formIsLoading, setFormIsLoading] = useState(false)
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),

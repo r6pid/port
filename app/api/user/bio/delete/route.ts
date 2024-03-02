@@ -7,7 +7,7 @@ import { authOptions } from '../../../../../lib/auth'
 export async function DELETE(req: Request, res: Response) {
     try {
         const session = await getServerSession(authOptions)
-        if (!session || !session.user.email) {
+        if (!session) {
             return NextResponse.json(
                 { message: 'Unauthorized' },
                 { status: 401 }
@@ -16,7 +16,7 @@ export async function DELETE(req: Request, res: Response) {
         const { id } = await req.json()
         const user = await db.user.update({
             where: {
-                email: session.user.email,
+                id: session.user?.id,
             },
             data: {
                 bio: {
@@ -35,7 +35,7 @@ export async function DELETE(req: Request, res: Response) {
         return NextResponse.json(
             {
                 user: user,
-                message: 'User deleted successfully',
+                message: 'Success',
             },
             { status: 201 }
         )

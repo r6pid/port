@@ -7,7 +7,7 @@ import { Loader } from 'lucide-react'
 import TabNav from '../../../../../components/TabNav'
 import { Loading } from '../../../../../components/Loading'
 import { Suspense } from 'react'
-import AccountForm from '../../../../../components/forms/AccountForm'
+import AccountForm from '../../../../../components/dashboard/AccountForm'
 
 export default async function LinksTab({
     params,

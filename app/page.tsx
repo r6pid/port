@@ -1,17 +1,18 @@
-'use server'
+'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../lib/auth'
+import { useSession } from 'next-auth/react'
 
-export default async function Home() {
-    const session = await getServerSession(authOptions)
+export default function Home() {
+    const { data: session, status } = useSession()
     return (
         <div className="min-h-[calc(100dvh-65px)] py-20">
             <p>welcome to port</p>
             <p>a proper homepage is coming soon</p>
             <div className="flex items-center flex-row mt-6 gap-3">
-                {session ? (
+                {status === 'loading' ? (
+                    <p className="text-base">Loading...</p>
+                ) : session?.user ? (
                     <Link
                         href="/dashboard"
                         className="underline transition-all hover:text-neutral-400"

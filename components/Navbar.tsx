@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useSession, signOut, getSession } from 'next-auth/react'
+import { useSession, signOut, getSession, signIn } from 'next-auth/react'
 import { useEffect } from 'react'
 import { Button } from './ui/button'
 import { Montserrat } from 'next/font/google'
@@ -11,7 +11,6 @@ const montserrat = Montserrat({ weight: '900', subsets: ['latin'] })
 
 const Navbar = () => {
     const { data: session, status } = useSession()
-
     return (
         <nav className="sticky top-0 z-50 inset-x-0">
             <div className="border-b bg-neutral-900 w-full">
@@ -30,7 +29,7 @@ const Navbar = () => {
                     <div className="z-5 flex justify-end items-center gap-2">
                         {status === 'loading' ? (
                             <p className="text-sm">Loading...</p>
-                        ) : session ? (
+                        ) : session?.user ? (
                             <>
                                 <Button asChild variant="link" className="">
                                     <Link href="/dashboard">Dashboard</Link>
@@ -44,14 +43,35 @@ const Navbar = () => {
                             </>
                         ) : (
                             <>
-                                <Button asChild variant="default">
-                                    <Link href="/login">Login</Link>
+                                <Button
+                                    variant="default"
+                                    onClick={() =>
+                                        signIn('google', {
+                                            callbackUrl: '/dashboard',
+                                        })
+                                    }
+                                >
+                                    Login
                                 </Button>
-                                <Button asChild variant="ghost">
-                                    <Link href="/signup">Sign Up</Link>
+                                <Button
+                                    variant="ghost"
+                                    onClick={() =>
+                                        signIn('google', {
+                                            callbackUrl: '/dashboard',
+                                        })
+                                    }
+                                >
+                                    Sign Up
                                 </Button>
                             </>
                         )}
+                        <Button
+                            asChild
+                            variant="default"
+                            onClick={() => signIn('google')}
+                        >
+                            Login
+                        </Button>
                     </div>
                 </div>
             </div>

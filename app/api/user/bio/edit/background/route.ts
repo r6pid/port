@@ -9,7 +9,7 @@ export async function POST(req: Request, res: Response) {
     try {
         const body = await req.json()
         const { backgroundURL, username } = body
-        if (!session || !session.user.email) {
+        if (!session) {
             return NextResponse.json(
                 {
                     message: 'Unathorized',
@@ -59,7 +59,7 @@ export async function DELETE(request: Request) {
         )
         const utapi = new UTApi()
         await utapi.deleteFiles(newURL)
-        if (!session || !session.user.email) {
+        if (!session) {
             return NextResponse.json(
                 {
                     message: 'Unathorized',

@@ -78,6 +78,8 @@ export default function PageAvatar({
                         fill
                         className="rounded-lg pointer-events-none select-none border object-cover"
                         alt="Avatar Image"
+                        priority
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     <div
                         className="bg-[#414141] flex p-1 absolute cursor-pointer z-20 rounded-sm right-[-6px] top-[-6px]"
