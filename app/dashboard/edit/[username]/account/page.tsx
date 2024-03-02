@@ -18,13 +18,6 @@ export default async function LinksTab({
     if (!session) {
         redirect('/login')
     }
-    const user = session.user.email
-        ? await db.user.findUnique({
-              where: { email: session.user.email },
-              include: { bio: true },
-          })
-        : null
-    console.log(user)
     return (
         <div className="min-h-[calc(100dvh-65px)] py-12">
             <TabNav username={params.username} activeTab={'account'} />
