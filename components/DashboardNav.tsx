@@ -6,11 +6,10 @@ import { useEffect } from 'react'
 import { Button } from './ui/button'
 import { Montserrat } from 'next/font/google'
 import { cn } from '../lib/utils'
-
+1
 const montserrat = Montserrat({ weight: '900', subsets: ['latin'] })
 
 const Navbar = () => {
-    const { data: session, status } = useSession()
     return (
         <nav className="sticky top-0 z-50 inset-x-0">
             <div className="border-b bg-neutral-900 w-full">
@@ -27,25 +26,14 @@ const Navbar = () => {
                         </Link>
                     </div>
                     <div className="z-5 flex justify-end items-center gap-2">
-                        <Button
-                            variant="default"
-                            onClick={() =>
-                                signIn('google', {
-                                    callbackUrl: '/dashboard',
-                                })
-                            }
-                        >
-                            Login
+                        <Button variant="link" asChild>
+                            <Link href="/dashboard">Dashboard</Link>
                         </Button>
                         <Button
-                            variant="ghost"
-                            onClick={() =>
-                                signIn('google', {
-                                    callbackUrl: '/dashboard',
-                                })
-                            }
+                            variant="destructive"
+                            onClick={() => signOut({ callbackUrl: '/' })}
                         >
-                            Sign Up
+                            Logout
                         </Button>
                     </div>
                 </div>

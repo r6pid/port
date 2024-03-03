@@ -29,7 +29,6 @@ export default function RootLayout({
                 )}
             >
                 <NextAuthSessionProvider>
-                    <Navbar />
                     <NextTopLoader
                         initialPosition={0.08}
                         crawlSpeed={200}
@@ -44,9 +43,7 @@ export default function RootLayout({
                         showAtBottom={false}
                         color="#ffffff"
                     />
-                    <main className="mx-auto md:max-w-screen-md px-6">
-                        <Providers>{children}</Providers>
-                    </main>
+                    <Providers>{children}</Providers>
                     <Toaster richColors expand duration={2000} />
                 </NextAuthSessionProvider>
             </body>

@@ -14,3 +14,8 @@ import type { OurFileRouter } from '../app/api/uploadthing/core'
 
 export const UploadButton = generateUploadButton<OurFileRouter>()
 export const UploadDropzone = generateUploadDropzone<OurFileRouter>()
+
+export const getLogo = (url: string) => {
+    const new_url = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=256`
+    return new_url
+}

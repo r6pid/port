@@ -37,6 +37,19 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Link {
+    id        String   @id @unique @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    title String
+    url   String
+    image String?
+
+    bioId String
+    bio   Bio    @relation(fields: [bioId], references: [id], onDelete: Cascade)
+}
+
 model Bio {
     id        String   @id @unique
     createdAt DateTime @default(now())
@@ -49,6 +62,8 @@ model Bio {
 
     avatar     String?
     background String?
+
+    links Link[]
 
     userId String
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
